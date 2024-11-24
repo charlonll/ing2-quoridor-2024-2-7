@@ -1,0 +1,80 @@
+
+    for (int i = 0; i < graph->num_nodes; i++) {
+        if (!visited[i]) return 0;
+    }
+    return 1;
+}
+
+// Identifier les sommets particuliers
+void find_special_vertices(Graph* graph) {
+    printf("\nProducteurs primaires (sans prédécesseurs) :\n");
+    for (int i = 0; i < graph->num_nodes; i++) {
+        int has_predecessor = 0;
+        for (int j = 0; j < graph->num_nodes; j++) {
+            Node* temp = graph->adjacency_list[j];
+            while (temp != NULL) {
+                if (strcmp(temp->name, graph->nodes[i]) == 0) {
+                    has_predecessor = 1;
+                    break;
+                }
+                temp = temp->next;
+            }
+        }
+        if (!has_predecessor) {
+            printf("- %s\n", graph->nodes[i]);
+        }
+    }
+
+    printf("\nPrédateurs finaux (sans successeurs) :\n");
+    for (int i = 0; i < graph->num_nodes; i++) {
+        if (!graph->adjacency_list[i]) {
+            printf("- %s\n", graph->nodes[i]);
+        }
+    }
+
+    printf("\nEspèces ayant une seule source d’alimentation :\n");
+    for (int i = 0; i < graph->num_nodes; i++) {
+        int count_predecessors = 0;
+        for (int j = 0; j < graph->num_nodes; j++) {
+            Node* temp = graph->adjacency_list[j];
+            while (temp != NULL) {
+                if (strcmp(temp->name, graph->nodes[i]) == 0) {
+                    count_predecessors++;
+                }
+                temp = temp->next;
+            }
+        }
+        if (count_predecessors == 1) {
+            printf("- %s\n", graph->nodes[i]);
+        }
+    }
+}
+
+// Fonction récursive pour calculer le niveau trophique
+int calculate_trophic_level_rec(Graph* graph, int index, int* levels) {
+    if (levels[index] != -1) {
+        // Niveau déjà calculé
+        return levels[index];
+    }
+
+    int max_level = 0;
+
+    // Parcourir les prédécesseurs
+    for (int i = 0; i < graph->num_nodes; i++) {
+        Node* temp = graph->adjacency_list[i];
+        while (temp != NULL) {
+            if (strcmp(temp->name, graph->nodes[index]) == 0) {
+                // Calculer récursivement le niveau trophique du prédécesseur
+                int pred_level = calculate_trophic_level_rec(graph, i, levels);
+                if (pred_level + 1 > max_level) {
+                    max_level = pred_level + 1;
+                }
+            }
+            temp = temp->next;
+        }
+    }
+
+    // Sauvegarder le niveau calculé
+    levels[index] = max_level;
+    return max_level;
+}
