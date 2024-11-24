@@ -1,0 +1,77 @@
+// Afficher les propriétés du graphe
+void display_graph(Graph* graph) {
+    printf("\nSommets :\n");
+    for (int i = 0; i < graph->num_nodes; i++) {
+        printf("- %s\n", graph->nodes[i]);
+    }
+
+    printf("\nArcs :\n");
+    for (int i = 0; i < graph->num_nodes; i++) {
+        Node* temp = graph->adjacency_list[i];
+        while (temp != NULL) {
+            printf("- %s -> %s\n", graph->nodes[i], temp->name);
+            temp = temp->next;
+        }
+    }
+
+    printf("\nSuccesseurs :\n");
+    for (int i = 0; i < graph->num_nodes; i++) {
+        printf("%s : ", graph->nodes[i]);
+        Node* temp = graph->adjacency_list[i];
+        while (temp != NULL) {
+            printf("%s ", temp->name);
+            temp = temp->next;
+        }
+        printf("\n");
+    }
+
+    printf("\nPrédécesseurs :\n");
+    for (int i = 0; i < graph->num_nodes; i++) {
+        printf("%s : ", graph->nodes[i]);
+        for (int j = 0; j < graph->num_nodes; j++) {
+            Node* temp = graph->adjacency_list[j];
+            while (temp != NULL) {
+                if (strcmp(temp->name, graph->nodes[i]) == 0) {
+                    printf("%s ", graph->nodes[j]);
+                }
+                temp = temp->next;
+            }
+        }
+        printf("\n");
+    }
+}
+
+// Vérification de la connexité faible
+int is_weakly_connected(Graph* graph) {
+    int visited[MAX_NODES] = {0};
+    int stack[MAX_NODES], stack_top = -1;
+
+    visited[0] = 1;
+    stack[++stack_top] = 0;
+
+    while (stack_top >= 0) {
+        int current = stack[stack_top--];
+        Node* temp = graph->adjacency_list[current];
+
+        // Explorer les successeurs
+        while (temp) {
+            int index = find_node_index(graph, temp->name);
+            if (!visited[index]) {
+                visited[index] = 1;
+                stack[++stack_top] = index;
+            }
+            temp = temp->next;
+        }
+
+        // Explorer les prédécesseurs
+        for (int i = 0; i < graph->num_nodes; i++) {
+            temp = graph->adjacency_list[i];
+            while (temp) {
+                if (strcmp(temp->name, graph->nodes[current]) == 0 && !visited[i]) {
+                    visited[i] = 1;
+                    stack[++stack_top] = i;
+                }
+                temp = temp->next;
+            }
+        }
+    }
