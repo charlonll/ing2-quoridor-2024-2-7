@@ -1,0 +1,41 @@
+int main() {
+    Graph graph;
+    initialize_graph(&graph);
+
+    char filename[256];
+    printf("Entrez le nom du fichier contenant le réseau : ");
+    scanf("%s", filename);
+
+    // Charger le graphe
+    load_graph_from_file(&graph, filename);
+
+    // Afficher le graphe
+    display_graph(&graph);
+
+    // Vérifier la connexité
+    if (is_weakly_connected(&graph)) {
+        printf("\nLe graphe est faiblement connexe.\n");
+    } else {
+        printf("\nLe graphe n'est pas faiblement connexe.\n");
+    }
+
+    // Identifier les sommets particuliers
+    find_special_vertices(&graph);
+
+    // Calculer les niveaux trophiques
+    calculate_trophic_levels(&graph);
+
+    // Supprimer une espèce
+    char species[MAX_NAME_LENGTH];
+    printf("\nEntrez une espèce à supprimer pour simuler son impact : ");
+    scanf("%s", species);
+
+    delete_species(&graph, species);
+    printf("\nL'espèce %s a été supprimée.\n", species);
+
+    // Réafficher le graphe après suppression
+    display_graph(&graph);
+    calculate_trophic_levels(&graph);
+
+    return 0;
+}
