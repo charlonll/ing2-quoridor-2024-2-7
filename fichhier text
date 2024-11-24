@@ -1,0 +1,25 @@
+Herbes Zèbres
+Herbes Gazelles
+Arbustes Zèbres
+Zèbres Lions
+Zèbres Hyènes
+Gazelles Lions
+Hyènes Lions
+
+Phytoplancton Zooplancton
+Algues Poissons_herbivores
+Zooplancton Poissons_herbivores
+Zooplancton Poissons_carnivores
+Poissons_herbivores Poissons_carnivores
+Poissons_carnivores Poulpes
+Poissons_carnivores Requins
+Poulpes Requins
+
+Gramin�es Marmottes
+Gramin�es Criquets
+Fleurs_sauvages Criquets
+Marmottes Aigles
+Marmottes Renards
+Criquets Renards
+Renards Loups
+Aigles Loups
